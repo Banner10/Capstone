@@ -11,7 +11,6 @@ The data use for this project was acquired from the Yahoo! finance API. I will b
 - ARIMA
 - FB Prophet
 - KNN Regressor
-- Decision Tree Regressor
 - Gaussian Process Regressor
 - Support Vector Regressor
 - Random Forset Regressor
@@ -20,36 +19,37 @@ The data use for this project was acquired from the Yahoo! finance API. I will b
 
 ## Results
 ### ARIMA 
-ARIMA did not work especially well for forecasting stock price in this case. There were two main reasons for this
-1. ARIMA is a linear model. One can only be so accurate prediciting a trend with oscillations and noise like a stock price with a straight line.
-2. Shocks, either positive or negative, are very hard to account for. Microsoft had an incredible 2019, mostly attributed to the company's invesment into cloud computing. The stock roce 55% which was unprecedented in the data the model was trained on. 
-<!-- end of the list -->
-RMSE: 22.50
-![Screenshot](Arima1year.png)
+This ARIMA model was tuned for optimal parameter selection. Although it did not predict the closing price accuracy it was able to plot the overall market direction using 3 years of data. This linear based model had a difficult time taking the covid crash into consideration.    
 
-
-Interestingy enough the model performed better on a two year prediction than it did on a one year prediction. This is due to the accuracy for 2018. At the end of the year the prediction was only about a dollar and 30 cents off. <br />
-RMSE: 15.44
-![Screenshot](Arima2year.png)
+![Screenshot](ARIMA_SPY.png)
 
 
 ### FB Prophet
-FB Prophet is a model based on a generalized additive model (GAM).<br />
-The model was fairly effective at forecasting forward and was extremely fast making it's predictions. For these reasons I chose to use this model for the front end of the project. <br />
-RMSE: 8.36
-![Screenshot](fbprophet.png)
+FB Prophet is a model that was created to take into account seasonality and was extremely effective for plotting general trends.  This model is predicting 150 days into the future where the black dots are real data points and the blue line is the prediction. The blue shadow is the confidence interval of 95%.  The model can also plot seasonal, weekly and daily trends shown below. 
+
+![Screenshot](FB_Prophet_spy.png)
+![Screenshot](FBP_Trends_spy.png)
+
+### REGRESSIVE ML MODELS
+When comparing KNN, gaussian process, support vector, and random forest regressors along with XGBoost, the random forest regressor model performed the best with a RMSE of 1.62. The image below shows a comparison of each model. These models were all trained on data from the previous 30 days of trading using 5 minute increments. 
+
+![Screenshot](ML_Regression_SPY.png)
+
 
 ### LSTM
-LSTM is an evolution of a Recurrent Neural Network. <br />
-LSTM uses a feedback loop and gates to “remember”. It predicts one step forward then shifts its window and updates its memory.<br />
-LSTM was the most effective model at forecasting stock prices but takes about an hour to fit. <br />
-MSE: 4.1 (RMSE: ~ 2)
-![Screenshot](LSTM.png)
+The long short-term memory or LSTM performed the best in my analysis for SPY with a RMSE of .66.  LSTM’s are an improved version of recurrent neural networks. While RNN’s can only connect recently perceived information they have a difficult time connecting as the time gap grows.  This is where LSTM’s are useful as the have the ability to remember information over a much larger period of time. This is illustrated in the chart below for the same time period as the pervious models, 1 month of data in 5 min increments. 
 
-## Moving Forward
+![Screenshot](LSTM_SPY_1m_5min.png)
 
-Using these models you can make a reasonable prediction moving forward but they don't take into account many factors that affect stock prices. To deal with this I would like to add two more pieces to this project:
-1. Sentiment Analysis: a model that can pick up on trends and news in the market that may cause shocks. NLP would be used for this.
-2. Fundamental Analysis: a model or decision machine that compiles financial statement information, computes critical metrics and ratios and runs the company through a "filter function" that categorizes it as a "Buy, "Sell", or "Hold.
-<!-- end of the list -->
-Using all three of these pieces in tandem would give you a much better overall view of a company and it's stock and would allow you to make a confident prediction about it's price into the future.
+
+
+
+
+## Conclusions and Further Wroks
+
+This project has led me to the conclusion that LSTM models can be a very useful tool when predicting the future movements of stocks. As you can see in the charts below the same LSTM model was able to accurately predict on multiple time frames. The first is a 3 year daily chart which produced a RMSE of 5.93 and the second is a 1 day/1min chart which resulted in a RMSE of .352. 
+
+![Screenshot](LSTM_SPY_3y_1d.png)
+![Screenshot](LAST_SPY_1d_1min.png)
+
+Moving forward I do believe that these models can be useful when considering the overall momentum and trend of a stock or ETF. I do believe they can be more useful on a ETF such as SPY as it is comprised of an aggregate of an entire index and does not been the fundamental analysis that would go into a company. 
